@@ -19,35 +19,36 @@ jobs:
   build:
     # The type of runner that the job will run on
     runs-on: ubuntu-22.04
+    
+    permissions:
+      contents: write
 
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
-      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+      # Checks-out master
       - uses: actions/checkout@v3
+        with:
+          path: master
 
+      # Checks-out library
+      - uses: actions/checkout@v3
+        with:
+          ref: library
+          path: library
 
-#       - name: Store LabVIEW project name
-#         run: LVPROJ=$(find $GITHUB_WORKSPACE | grep -oP '(?<=\/)[^\/]+(?=\.lvproj)')
-
-
-      - name: Move LabVIEW project files to root direcotry
+      - name: Clear library directory
         run: |
-          LVPROJ=$(find $GITHUB_WORKSPACE | grep -oP '(?<=\/)[^\/]+(?=\.lvproj)')
+            rm -rfv $GITHUB_WORKSPACE/library/*
+            ls -la $GITHUB_WORKSPACE/library
+
+      - name: Move LabVIEW project files from master to library direcotry
+        run: |
+          LVPROJ=$(find $GITHUB_WORKSPACE/master | grep -oP '(?<=\/)[^\/]+(?=\.lvproj)')
           echo ${LVPROJ}
-          echo $GITHUB_WORKSPACE/${LVPROJ}/
-          mkdir $GITHUB_WORKSPACE/tmp
-          mv $GITHUB_WORKSPACE/${LVPROJ}/* $GITHUB_WORKSPACE/tmp
-          git branch -a
-          shopt -s extglob
-          rm -rfv !("tmp")
-          shopt -u extglob
-          mv $GITHUB_WORKSPACE/tmp/* $GITHUB_WORKSPACE
-          rm -rf $GITHUB_WORKSPACE/tmp          
-          ls -la
-        
-        
-#       - name: Remove LabVIEW project directory
-#         run: rm -r ${LVPROJ}
-      
-#       - name: List root direcotry
-#         run: ls -l
+          mv $GITHUB_WORKSPACE/master/${LVPROJ}/* $GITHUB_WORKSPACE/library
+          ls -la $GITHUB_WORKSPACE/library
+          
+      - uses: stefanzweifel/git-auto-commit-action@v4
+        with:
+          branch: library
+          repository: $GITHUB_WORKSPACE/library
