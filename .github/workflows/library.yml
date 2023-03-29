@@ -51,4 +51,4 @@ jobs:
       - uses: stefanzweifel/git-auto-commit-action@v4
         with:
           branch: library
-          repository: $GITHUB_WORKSPACE/library
+          repository: library
