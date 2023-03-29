@@ -26,16 +26,22 @@ jobs:
       - uses: actions/checkout@v3
 
 
-      - name: Store LabVIEW project name
-        run: LVPROJ=$(find $GITHUB_WORKSPACE | grep -oP '(?<=\/)[^\/]+(?=\.lvproj)')
+#       - name: Store LabVIEW project name
+#         run: LVPROJ=$(find $GITHUB_WORKSPACE | grep -oP '(?<=\/)[^\/]+(?=\.lvproj)')
 
 
       - name: Move LabVIEW project files to root direcotry
-        run: mv $GITHUB_WORKSPACE/${LVPROJ}/* $GITHUB_WORKSPACE
+        run: |
+          LVPROJ=$(find $GITHUB_WORKSPACE | grep -oP '(?<=\/)[^\/]+(?=\.lvproj)')
+          echo ${LVPROJ}
+          echo $GITHUB_WORKSPACE/${LVPROJ}/
+          mv $GITHUB_WORKSPACE/${LVPROJ}/* $GITHUB_WORKSPACE
+          rm -r ${LVPROJ}
+          ls -l
         
         
-      - name: Remove LabVIEW project directory
-        run: rm -r ${LVPROJ}
+#       - name: Remove LabVIEW project directory
+#         run: rm -r ${LVPROJ}
       
-      - name: List root direcotry
-        run: ls -l
+#       - name: List root direcotry
+#         run: ls -l
