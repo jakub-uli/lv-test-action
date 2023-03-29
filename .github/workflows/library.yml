@@ -37,7 +37,7 @@ jobs:
           echo $GITHUB_WORKSPACE/${LVPROJ}/
           mkdir $GITHUB_WORKSPACE/tmp
           mv $GITHUB_WORKSPACE/${LVPROJ}/* $GITHUB_WORKSPACE/tmp
-          git switch library
+          git branch -a
           shopt -s extglob
           rm -rfv !("tmp")
           shopt -u extglob
