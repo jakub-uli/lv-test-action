@@ -35,9 +35,15 @@ jobs:
           LVPROJ=$(find $GITHUB_WORKSPACE | grep -oP '(?<=\/)[^\/]+(?=\.lvproj)')
           echo ${LVPROJ}
           echo $GITHUB_WORKSPACE/${LVPROJ}/
-          mv $GITHUB_WORKSPACE/${LVPROJ}/* $GITHUB_WORKSPACE
-          rm -r ${LVPROJ}
-          ls -l
+          mkdir $GITHUB_WORKSPACE/tmp
+          mv $GITHUB_WORKSPACE/${LVPROJ}/* $GITHUB_WORKSPACE/tmp
+          git switch library
+          shopt -s extglob
+          rm -rfv !("tmp")
+          shopt -u extglob
+          mv $GITHUB_WORKSPACE/tmp/* $GITHUB_WORKSPACE
+          rm -rf $GITHUB_WORKSPACE/tmp          
+          ls -la
         
         
 #       - name: Remove LabVIEW project directory
