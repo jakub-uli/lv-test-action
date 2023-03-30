@@ -49,7 +49,7 @@ jobs:
             echo "Removed library files:"
             shopt -s extglob
             shopt -s dotglob
-            rm -rfv !(.git)
+            rm -rfv !(".git"|"."|"..")
             shopt -u dotglob
             shopt -u extglob
             echo "Library file list:"
