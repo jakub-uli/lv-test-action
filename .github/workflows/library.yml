@@ -25,33 +25,45 @@ jobs:
 
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
-      # Checks-out master
-      - uses: actions/checkout@v3
+      - name: Checkout master branch
+        uses: actions/checkout@v3
         with:
           path: master
       
-      - uses: peterjgrainger/action-create-branch@v2.2.0
+      - name: Create library branch if not existing
+        uses: peterjgrainger/action-create-branch@v2.2.0
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           branch: library
 
-      # Checks-out library
-      - uses: actions/checkout@v3
+      - name: Checkout library branch
+        uses: actions/checkout@v3
         with:
           ref: library
           path: library
 
       - name: Clear library directory
         run: |
-            rm -rfv $GITHUB_WORKSPACE/library/*
-            ls -la $GITHUB_WORKSPACE/library
+            cd $GITHUB_WORKSPACE/library
+            echo "Removed library files:"
+            shopt -s extglob
+            shopt -s dotglob
+            rm -rfv !(.git)
+            shopt -u dotglob
+            shopt -u extglob
+            echo "Library file list:"
+            ls -la
+            cd $GITHUB_WORKSPACE
 
-      - name: Move LabVIEW project files from master to library direcotry
+      - name: Move LabVIEW project files to library folder
         run: |
-          LVPROJ=$(find $GITHUB_WORKSPACE/master | grep -oP '(?<=\/)[^\/]+(?=\.lvproj)')
-          echo ${LVPROJ}
-          mv $GITHUB_WORKSPACE/master/${LVPROJ}/* $GITHUB_WORKSPACE/library
+          LVPROJ=$(find $GITHUB_WORKSPACE/master -name *.lvproj)
+          echo "LabVIEW project file: ${LVPROJ}"
+          LVDIR=$(dirname ${LVPROJ})
+          echo "LabVIEW project directory: ${LVDIR}"
+          mv $GITHUB_WORKSPACE/master/${LVDIR}/* $GITHUB_WORKSPACE/library
+          echo "Library file list:"
           ls -la $GITHUB_WORKSPACE/library
           
       - uses: stefanzweifel/git-auto-commit-action@v4
