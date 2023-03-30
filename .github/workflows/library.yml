@@ -1,29 +1,20 @@
-# This is a basic workflow to help you get started with Actions
+name: Update library
 
-name: CI
-
-# Controls when the workflow will run
 on:
-  # Triggers the workflow on push or pull request events but only for the "master" branch
   push:
     branches: [ "master" ]
   pull_request:
     branches: [ "master" ]
 
-  # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
 
-# A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
-  # This workflow contains a single job called "build"
-  build:
-    # The type of runner that the job will run on
+  update-library:
+    name: Update the library branch with changes from master
     runs-on: ubuntu-22.04
-    
     permissions:
       contents: write
 
-    # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
       - name: Checkout master branch
         uses: actions/checkout@v3
@@ -50,7 +41,7 @@ jobs:
           git reset origin/master --hard
           cd $GITHUB_WORKSPACE
 
-      - name: Clear library directory
+      - name: Clear library folder
         run: |
             cd $GITHUB_WORKSPACE/library
             echo "Removed library files:"
@@ -73,7 +64,8 @@ jobs:
           echo "Library file list:"
           ls -la $GITHUB_WORKSPACE/library
           
-      - uses: stefanzweifel/git-auto-commit-action@v4
+      - name: Push library branch
+        uses: stefanzweifel/git-auto-commit-action@v4
         with:
           branch: library
           repository: library
