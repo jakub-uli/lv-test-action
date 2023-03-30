@@ -2,15 +2,15 @@ name: Update library
 
 on:
   push:
-    branches: [ "master" ]
+    branches: [ $default-branch ]
   pull_request:
-    branches: [ "master" ]
+    branches: [ $default-branch ]
 
   workflow_dispatch:
 
 jobs:
   update-library:
-    name: Update the library branch with changes from master
+    name: Update the library branch with changes from default branch
     runs-on: ubuntu-22.04
     permissions:
       contents: write
@@ -38,7 +38,7 @@ jobs:
       - name: Reset library branch to master
         run: |
           cd $GITHUB_WORKSPACE/library
-          git reset origin/master --hard
+          git reset origin/HEAD --hard
           cd $GITHUB_WORKSPACE
 
       - name: Clear library folder
