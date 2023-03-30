@@ -2,9 +2,9 @@ name: Update library
 
 on:
   push:
-    branches: [ $default-branch ]
+    branches: [ master ]
   pull_request:
-    branches: [ $default-branch ]
+    branches: [ master ]
 
   workflow_dispatch:
 
@@ -38,8 +38,7 @@ jobs:
       - name: Reset library branch to master
         run: |
           cd $GITHUB_WORKSPACE/library
-          git branch -a
-          git reset origin/HEAD --hard
+          git reset origin/master --hard
           cd $GITHUB_WORKSPACE
 
       - name: Clear library folder
