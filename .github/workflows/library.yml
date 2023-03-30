@@ -62,7 +62,7 @@ jobs:
           echo "LabVIEW project file: ${LVPROJ}"
           LVDIR=$(dirname ${LVPROJ})
           echo "LabVIEW project directory: ${LVDIR}"
-          mv $GITHUB_WORKSPACE/master/${LVDIR}/* $GITHUB_WORKSPACE/library
+          mv ${LVDIR}/* $GITHUB_WORKSPACE/library
           echo "Library file list:"
           ls -la $GITHUB_WORKSPACE/library
           
