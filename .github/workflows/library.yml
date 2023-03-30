@@ -47,7 +47,8 @@ jobs:
       - name: Reset library branch to master
         run: |
           cd $GITHUB_WORKSPACE/library
-          git reset master
+          git remote -v
+          git reset origin/master
           cd $GITHUB_WORKSPACE
 
       - name: Clear library directory
