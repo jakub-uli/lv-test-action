@@ -42,6 +42,7 @@ jobs:
         with:
           ref: library
           path: library
+          fetch-depth: 0
       
       - name: Reset library branch to master
         run: |
